@@ -3,6 +3,10 @@
     "displayName": "Livewire Switcher",
     "description": "Switch between component class and view files for Laravel Livewire",
     "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/bebo925/laravel-switcher.git"
+    },
     "engines": {
         "vscode": "^1.64.0"
     },
