@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-
+import * as fs from 'fs';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -15,12 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand('livewire-switcher.switch', async () => {
     // console.log(vscode.workspace.asRelativePath(vscode.window.activeTextEditor?.document.fileName || ''));
     if (vscode.workspace.workspaceFolders && vscode.window.activeTextEditor) {
-      let livewireClassPath = 'app/Http/Livewire/';
-      try {
-        throw vscode.FileSystemError.FileIsADirectory(vscode.workspace.workspaceFolders[0].uri.path + '/' + livewireClassPath);
-      } catch (error) {
-        livewireClassPath = 'app/Livewire/';
-      }
+      let livewireClassPath = (await fs.existsSync(vscode.workspace.workspaceFolders[0].uri.fsPath + '/app/Http/Livewire')) ? 'app/Http/Livewire/' : 'app/Livewire/';
 
       if (vscode.workspace.asRelativePath(vscode.window.activeTextEditor?.document.fileName).startsWith('resources/views/livewire/')) {
         const relativePath = vscode.window.activeTextEditor?.document.fileName.split('resources/views/livewire/')[1];
