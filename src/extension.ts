@@ -15,26 +15,31 @@ export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand('livewire-switcher.switch', async () => {
     // console.log(vscode.workspace.asRelativePath(vscode.window.activeTextEditor?.document.fileName || ''));
     if (vscode.workspace.workspaceFolders && vscode.window.activeTextEditor) {
+      let livewireClassPath = 'app/Http/Livewire/';
+      try {
+        throw vscode.FileSystemError.FileIsADirectory(vscode.workspace.workspaceFolders[0].uri.path + '/' + livewireClassPath);
+      } catch (error) {
+        livewireClassPath = 'app/Livewire/';
+      }
+
       if (vscode.workspace.asRelativePath(vscode.window.activeTextEditor?.document.fileName).startsWith('resources/views/livewire/')) {
         const relativePath = vscode.window.activeTextEditor?.document.fileName.split('resources/views/livewire/')[1];
         let file = relativePath
           .replace('.blade.php', '')
           .split('/')
-          .map((folder, index, array) => {
-            return folder
+          .map((folder, index, array) =>
+            folder
               .split('-')
-              .map((word, index, array) => {
-                return word.charAt(0).toUpperCase() + word.slice(1);
-              })
-              .join('');
-          })
+              .map((word, index, array) => word.charAt(0).toUpperCase() + word.slice(1))
+              .join('')
+          )
           .join('/')
           .concat('.php');
 
-        const document = await vscode.workspace.openTextDocument(vscode.workspace.workspaceFolders[0].uri.path + '/app/Http/Livewire/' + file);
+        const document = await vscode.workspace.openTextDocument(vscode.workspace.workspaceFolders[0].uri.path + '/' + livewireClassPath + file);
         await vscode.window.showTextDocument(document);
-      } else if (vscode.workspace.asRelativePath(vscode.window.activeTextEditor?.document.fileName).startsWith('app/Http/Livewire/')) {
-        const relativePath = vscode.window.activeTextEditor?.document.fileName.split('app/Http/Livewire/')[1];
+      } else if (vscode.workspace.asRelativePath(vscode.window.activeTextEditor?.document.fileName).startsWith(livewireClassPath)) {
+        const relativePath = vscode.window.activeTextEditor?.document.fileName.split(livewireClassPath)[1];
         let file = relativePath
           .split('/')
           .map((d, index, array) => {

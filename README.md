@@ -10,6 +10,10 @@ Keyboard shortcut: `CMD + Alt + L`
 
 ## Release Notes
 
+### 0.1.0
+
+Update for Livewire 3
+
 ### 0.0.1
 
 Initial release
